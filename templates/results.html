@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(-45deg, #FFEBCC, #FFDAB9, #FFC68E, #FFAB66);
+            background-size: 400% 400%;
+            color: #495057;
+            margin: 0;
+            animation: gradientAnimation 10s linear infinite;
+        }
+ 
+        .container {
+            margin-top: 40px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+ 
+        .preview {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+        }
+ 
+        #logo {
+            width: 300px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-right: 10px;
+            margin: 10px auto;
+        }
+ 
+        a {
+            color: #00aaff;
+            text-decoration: none;
+        }
+ 
+        a:hover {
+            color: #0088cc;
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Your Image" id="logo">
+    <div class="container">
+        <img src="{{ prediction_image_url }}" alt="Preview" class="preview">
+        <h2>Prediction: {{ prediction }}</h2>
+        <p>Confidence: {{ confidence }}%</p>
+        <p>Description: {{ description }}</p>
+        <a href="/" onclick="deleteFileAndGoHome(event)">Back to Home</a>
+    </div>
+ 
+    <script>
+        function deleteFileAndGoHome(event) {
+            event.preventDefault();  // Prevents the default link action
+
+            fetch('/delete-file?filename={{ prediction_image_url.split('/')[-1] }}')  // Sends a request to delete the file
+                .then(response => {
+                    if(response.ok) {
+                        window.location.href = '/';  // Redirects to home on successful deletion
+                    } else {
+                        console.error('Error deleting file');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
